@@ -1,0 +1,31 @@
+@use '../../assets/styles/colors';
+
+$movesTable-height: 255px;
+$playerNameContainer-height: 45px;
+$movesContainer-height: $movesTable-height - (2 * $playerNameContainer-height);
+
+.movesTable {
+  display: flex;
+  flex-direction: column;
+  background-color: colors.$white;
+  border-radius: 5px;
+  height: $movesTable-height;
+  width: 350px;
+}
+
+.playerNameContainer {
+  display: flex;
+  align-items: center;
+  background-color: colors.$dark-blue;
+  font-style: bold;
+  color: white;
+  height: $playerNameContainer-height;
+  width: 100%;
+}
+
+.movesContainer {
+  overflow-y: scroll;
+  background-color: colors.$white;
+  height: $movesContainer-height;
+  width: 100%;
+}
