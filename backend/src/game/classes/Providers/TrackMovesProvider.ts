@@ -1,13 +1,18 @@
-import Figure from '../models/Figures/Figure';
-import { movesResponse } from '../Utils/interfaces';
-import { color, coordinate, figureType } from '../Utils/types';
+import Board from '../../models/Board';
 
-class MovesTrackerController {
+import Figure from '../../models/Figures/Figure';
 
+import { coordinate, figureType } from '../../Utils/types';
+
+
+class TrackMovesProvider {
+
+  private readonly _board;
   private whiteFiguresMoves: string[];
   private blackFigureMoves: string[];
 
-  constructor() {
+  constructor(board: Board) {
+    this._board = board;
     this.whiteFiguresMoves = [];
     this.blackFigureMoves = [];
   }
@@ -26,7 +31,6 @@ class MovesTrackerController {
     return this.columnLabels[y];
   }
  
-
   private createMove(figure: Figure, targetCoordinate: coordinate): string {
     const figurelabel = this.getFigurelabel(figure);
     const columnLabel = this.getColumnLabel(targetCoordinate);
@@ -38,21 +42,14 @@ class MovesTrackerController {
 
   public getBlackMoves = (): string[] => this.blackFigureMoves;
 
-
-  public writeMove(figure: Figure, targetCoordinate: coordinate, permissionColor: color) {
+  public writeMove(startCoordinate: coordinate, targetCoordinate: coordinate) {
+    const figure = this._board.getCellByCoordinate(startCoordinate).getFigure() as Figure;
     const move = this.createMove(figure, targetCoordinate);
-    permissionColor === 'white'
+    figure.getColor() === 'white'
       ? this.whiteFiguresMoves.push(move)
       : this.blackFigureMoves.push(move);
   }
 
-  public getMovesJSON(): movesResponse {
-    return {
-      whiteMoves: this.whiteFiguresMoves,
-      blackMoves: this.blackFigureMoves
-    }
-  }
-
 }
 
-export default MovesTrackerController;
+export default TrackMovesProvider;

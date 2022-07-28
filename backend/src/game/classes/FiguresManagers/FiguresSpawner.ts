@@ -1,13 +1,13 @@
-import Board from '../models/Board';
+import Board from '../../models/Board';
 
-import Pawn from '../models/Figures/Pawn';
-import Rook from '../models/Figures/Rook';
-import Knight from '../models/Figures/Knight';
-import Bishop from '../models/Figures/Bishop';
-import Queen from '../models/Figures/Queen';
-import King from '../models/Figures/King';
+import Pawn from '../../models/Figures/Pawn';
+import Rook from '../../models/Figures/Rook';
+import Knight from '../../models/Figures/Knight';
+import Bishop from '../../models/Figures/Bishop';
+import Queen from '../../models/Figures/Queen';
+import King from '../../models/Figures/King';
 
-import { color } from '../Utils/types';
+import { color } from '../../Utils/types';
 
 
 class FiguresSpawner {

@@ -12,8 +12,16 @@ export type figure = {
 
 export type cell = {
   coordinate: coordinate,
-  color: color,
   isAvailabelMove: boolean
   figure?: figure
 };
 
+export type userData = {
+  name: string,
+  color: color
+}
+
+export type tableMoves = {
+  whiteMoves: string[],
+  blackMoves: string[]
+}

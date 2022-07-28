@@ -12,7 +12,7 @@ class Board {
   }
 
   private initBoard = (): Cell[][] => {
-
+    
     let board: Cell[][] = [];
 
     for(let i = 0; i < 8; i++) {
@@ -35,7 +35,7 @@ class Board {
       if(searchingCell) return searchingCell;
     }
 
-    throw Error('Cell not found'); //TODO: handle it
+    throw Error('Cell not found');
   }
 
   public toJSON = () => this._cells.map(row => row.map(cell => cell.toJSON()));

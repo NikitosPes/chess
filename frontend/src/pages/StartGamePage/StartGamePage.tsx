@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 import StartGameForm from '../../layouts/StartGameForm/StartGameForm';

@@ -1,31 +1,18 @@
 @use '../../assets/styles/colors';
 
-$movesTable-height: 255px;
-$playerNameContainer-height: 45px;
-$movesContainer-height: $movesTable-height - (2 * $playerNameContainer-height);
+$nameSection-height: 45px;
+$movesTable-height: 210px;
 
-.movesTable {
-  display: flex;
-  flex-direction: column;
-  background-color: colors.$white;
-  border-radius: 5px;
-  height: $movesTable-height;
-  width: 350px;
-}
 
-.playerNameContainer {
-  display: flex;
-  align-items: center;
-  background-color: colors.$dark-blue;
-  font-style: bold;
-  color: white;
-  height: $playerNameContainer-height;
-  width: 100%;
+.movesTableWrapper {
+  display: grid;
+  grid-template-rows: $nameSection-height $movesTable-height $nameSection-height;
+  width: 300px;
 }
 
 .movesContainer {
   overflow-y: scroll;
   background-color: colors.$white;
-  height: $movesContainer-height;
+  height: 100%;
   width: 100%;
 }

@@ -1,48 +1,86 @@
-import BoardController from './BoardController';
-import PlayersTurnController from '../classes/PlayersTurnController';
-import BoardJSONParser from '../classes/BoardSONParser';
+import Board from '../models/Board';
 
-import { coordinate } from '../Utils/types';
-import MovesTrackerController from './MovesTrackerController';
-import { movesResponse } from '../Utils/interfaces';
+import BoardController from './BoardController';
+import CheckInspector from '../classes/Inspectors/CheckInspector';
+import CheckmateInspector from '../classes/Inspectors/CheckmateInspector';
+import PlayersTurnController from '../classes/Providers/PlayersTurnProvider';
+import MovesTrackerController from '../classes/Providers/TrackMovesProvider';
+import AvailabelMovesProvider from '../classes/Providers/AvailabelMovesProvider';
+
+import { color, coordinate, moves } from '../Utils/types';
 
 
 class GameController {
 
+  public isCheckmate: boolean;
+  private _isCheck: boolean;
+
+  private readonly _board;
   private readonly _boardController;
-  private readonly _boardJSONParser;
-  private readonly _playerTurnController;
-  private readonly _moveTrackerController;
-
+  private readonly _availableMovesProvider;
+  private readonly _checkInspector;
+  private readonly _checkmateInspector;
+  private readonly _playersTurnProvider;
+  private readonly _trackMovesProvider;
+ 
+  
   constructor() {
-    this._playerTurnController = new PlayersTurnController();
-    this._boardJSONParser = new BoardJSONParser();
-    this._moveTrackerController = new MovesTrackerController();
-    this._boardController = new BoardController(this._moveTrackerController);
+    this.isCheckmate = false;
+    this._isCheck = false;
+
+    this._board = new Board();
+    this._boardController = new BoardController(this._board);
+    this._checkInspector = new CheckInspector(this._board);
+    this._availableMovesProvider = new AvailabelMovesProvider(this._checkInspector);
+    this._checkmateInspector = new CheckmateInspector(this._board, this._availableMovesProvider);
+    this._playersTurnProvider = new PlayersTurnController();
+    this._trackMovesProvider = new MovesTrackerController(this._board);
   }
 
-  public getBoardState() {
-    return this._boardJSONParser.getBoardJSONState(this._boardController.getBoard());
+  public getBoard(): Board {
+    return this._board;
   }
 
-  public getBoardWithAvaiLabelMovesForFigureByCoordinates(cellCoordinate: coordinate) {
-    const permissionColor = this._playerTurnController.getColorWithPermissionToMove();
-    const availabelMoves = this._boardController.getMovesForFigure(cellCoordinate, permissionColor);
-    return this._boardJSONParser.getBoardJSONStateWithAvailabelMoves(this._boardController.getBoard(), availabelMoves);
-  }
-
-  public moveFigure(startCoordinate: coordinate, targetCoordinate: coordinate): void {
-    const permissionColor = this._playerTurnController.getColorWithPermissionToMove();
-    this._boardController.moveFigure(startCoordinate, targetCoordinate, permissionColor);
-    this._playerTurnController.changePermissionToMove();
-  }
-
-  public startGame(): void {
+  public initFigures(): void {
     this._boardController.setFiguresOnBoard();
   }
 
-  public getMoves(): movesResponse {
-    return this._moveTrackerController.getMovesJSON();
+  public getAvaiLabelMovesForFigureByCoordinate(cellCoordinate: coordinate): moves {
+    const availabelMoves = this._availableMovesProvider.getMoves(cellCoordinate, this._board);
+    return availabelMoves;
+  }
+
+  public resetCheckStatus(permissionColor: color): void {
+    if(!this._isCheck) return;
+    this._isCheck = false;
+    this._checkInspector.resetAttackedStatusForKing(permissionColor); 
+  }
+
+  public inspectForCheckmate(permissionColor: color) {
+    if(this._checkInspector.isCheck(permissionColor)) {
+      this._isCheck = true;
+      this._checkInspector.setAttackedStatusForKing(permissionColor);
+      if(this._checkmateInspector.isCheckmate(permissionColor)) {
+        console.log('checkmate')
+        this.isCheckmate = true;
+      } 
+    }
+  }
+
+  public moveFigure(startCoordinate: coordinate, targetCoordinate: coordinate): void {
+    const colorWithPermission = this._playersTurnProvider.getColorWithPermissionToMove();
+    this.resetCheckStatus(colorWithPermission);
+    this._trackMovesProvider.writeMove(startCoordinate, targetCoordinate);
+    this._boardController.moveFigure(startCoordinate, targetCoordinate);
+    this._playersTurnProvider.changePermissionToMove();
+    this.inspectForCheckmate(this._playersTurnProvider.getColorWithPermissionToMove());
+  }
+
+  public getAllBoardMoves(): string[][] {
+    let moves = [];
+    moves.push(this._trackMovesProvider.getWhiteMoves());
+    moves.push(this._trackMovesProvider.getBlackMoves());
+    return moves;
   }
 }
 

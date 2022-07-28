@@ -1,4 +1,4 @@
-import { color } from "../Utils/types";
+import { color } from './Utils/types';
 
 class Player {
   

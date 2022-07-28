@@ -1,46 +1,31 @@
 import Board from '../models/Board';
 
-import FiguresMover from '../classes/FiguresMover';
-import AvailabelMovesProvider from '../classes/AvailabelMovesProvider';
-import CheckmateChecker from '../classes/CheckmateChecker';
-import MovesProvider from '../classes/MovesProvider';
+import FiguresMover from '../classes/FiguresManagers/FiguresMover';
+import FiguresSpawner from '../classes/FiguresManagers/FiguresSpawner';
 
-import { color, coordinate, moves } from '../Utils/types';
-import FiguresSpawner from '../classes/FiguresSpawner';
-import MovesTrackerController from './MovesTrackerController';
-import CastleProvider from '../classes/CastleProvider';
+
+
+import { color, coordinate } from '../Utils/types';
+import TrackMovesProvider from '../classes/Providers/TrackMovesProvider';
 
 
 class BoardController {
 
   private readonly _board;
-  private readonly _movesProvider;
-  private readonly _availableMovesProvider;
-  private readonly _castleProvider;
-  private readonly _checkmateCheker;
   private readonly _figuresSpawner;
   private readonly _figuresMover;
+  // private readonly _trackMovesProvider;
 
-  constructor(movesTrackerController: MovesTrackerController) {
-    this._board = new Board();
+  constructor(board: Board) {
+    this._board = board;
     this._figuresSpawner = new FiguresSpawner();
-    this._movesProvider = new MovesProvider(this._board);
-    this._castleProvider = new CastleProvider(this._board);
-    this._checkmateCheker = new CheckmateChecker(this._board, this._movesProvider);
-    this._figuresMover = new FiguresMover(this._board, this._checkmateCheker, this._castleProvider, movesTrackerController);
-    this._availableMovesProvider = new AvailabelMovesProvider(this._board, this._movesProvider, this._checkmateCheker, this._castleProvider);
+    this._figuresMover = new FiguresMover(this._board);
+    // this._trackMovesProvider = new TrackMovesProvider(this._board);
   }
 
-  public getBoard(): Board {
-    return this._board;
-  }
-
-  public getMovesForFigure(figureCoordinate: coordinate, permissionColor: color): moves {
-    return this._availableMovesProvider.getMoves(figureCoordinate, permissionColor);
-  }
-
-  public moveFigure(startCoordinate: coordinate, targetCoordinate: coordinate, permissionColor: color): void {
-    this._figuresMover.moveFigure(startCoordinate, targetCoordinate, permissionColor);
+  public moveFigure(startCoordinate: coordinate, targetCoordinate: coordinate): void {
+    this._figuresMover.moveFigure(startCoordinate, targetCoordinate);
+    // this._trackMovesProvider.writeMove(startCoordinate, targetCoordinate);
   }
 
   public setFiguresOnBoard(): void {

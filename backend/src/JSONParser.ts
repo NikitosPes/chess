@@ -1,11 +1,11 @@
-import Board from '../models/Board';
-import Cell from '../models/Cell';
+import Board from './game/models/Board';
+import Cell from './game/models/Cell';
 
-import { responseCellData } from '../Utils/interfaces';
-import { moves, coordinate } from '../Utils/types';
+import { movesResponse, responseCellData } from './game/Utils/interfaces';
+import { moves, coordinate } from './game/Utils/types';
 
 
-class BoardJSONParser {
+class JSONParser {
 
   private isCoordinateAvailableMove(availableMoves: moves, coordinate: coordinate): boolean {
     for(let move of availableMoves) {
@@ -14,11 +14,11 @@ class BoardJSONParser {
     return false;
   }
 
-  public getBoardJSONState(board: Board) {
+  public parseBoardToJSON(board: Board) {
     return board.toJSON();
   }
 
-  public getBoardJSONStateWithAvailabelMoves(board: Board, availableMoves: moves): responseCellData[][] {
+  public parseBoardtateWithAvailabelMoves(board: Board, availableMoves: moves): responseCellData[][] {
     
     const result = board.toJSON().map(row => {
         return row.map(cell => {
@@ -30,6 +30,16 @@ class BoardJSONParser {
 
     return result;
   }
+
+  public parseAllBoardMoves(moves: string[][]): movesResponse {
+    return {
+      whiteMoves: moves[0],
+      blackMoves: moves[1]
+    }
+  
+  }
+
+
 }
 
-export default BoardJSONParser;
+export default JSONParser;

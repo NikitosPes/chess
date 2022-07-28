@@ -1,6 +1,6 @@
-import { color } from '../Utils/types';
+import { color } from '../../Utils/types';
 
-class PlayersTurnController {
+class PlayersTurnProvider {
 
   private _colorWithPermission: color;
 
@@ -15,4 +15,4 @@ class PlayersTurnController {
   } 
 }
 
-export default PlayersTurnController;
+export default PlayersTurnProvider ;

@@ -1,27 +1,24 @@
 import Player from './Player';
-import GameController from '../controllers/GameController';
+import GameController from './controllers/GameController';
+
 
 class GameRoom {
   
   private _roomName: string;
-  private _player1?: Player;
+  private _player1: Player;
   private _player2?: Player;
   public gameController: GameController;
 
-  constructor(roomName: string) {
+  constructor(roomName: string, player1: Player) {
     this._roomName = roomName;
     this.gameController = new GameController();
-  }
-
-  public initGameRoom(player1: Player):void {
     this._player1 = player1;
-    this.gameController.getBoardState();
   }
 
   public startGame(player2: Player) {
     this._player2 = player2;
     player2.setColor(this._player1!.getColor() ==='white' ? 'black' : 'white');
-    this.gameController.startGame();
+    this.gameController.initFigures();
   }
 
   public getRoomInfo() {

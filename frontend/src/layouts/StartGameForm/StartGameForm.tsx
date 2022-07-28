@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
+import { useDispatch} from 'react-redux';
 import { setUserColor, setUserName, setUserRoom} from '../../store/slices/userSlice';
 
 import Input from '../../components/UI/Input/Input';
@@ -9,7 +8,6 @@ import TabBar from '../TabBar/Tabbar';
 
 import styles from './StartGameForm.module.scss';
 import { color } from '../../utils/types';
-import { UserData } from '../../store/types';
 import { SocketContext } from '../../contexts/socket';
 
 const StartGameForm: React.FC = () => {
@@ -24,22 +22,20 @@ const StartGameForm: React.FC = () => {
   const [color, setColor] = useState<string>('');
 
   const socket = useContext(SocketContext);
-  const userData: UserData = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
-  
-  console.log(userData)
 
   const joinGameHandler = () => {
+    socket.emit('joinGame', {userName: name, roomName: room});
     dispatch(setUserName(name));
     dispatch(setUserRoom(room));
-    socket.emit('joinGame', room);
+    socket.on('roomInfo:read', (roomInfo) => dispatch(setUserColor(roomInfo.player_2.color)));
   }
 
   const newGameHandler = () => {
     dispatch(setUserName(name));
     dispatch(setUserRoom(room));
     dispatch(setUserColor(color as color));
-    socket.emit('newGame', room);
+    socket.emit('newGame', {userName: name, userColor: color, roomName: room });
   }
 
   const buttonClickHandler = () => {

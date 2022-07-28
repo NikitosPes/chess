@@ -7,7 +7,6 @@ export interface responseFigureData {
 }
 
 export interface responseCellData {
-  color: color,
   coordinate: coordinate,
   figure: responseFigureData | null,
   isAvailabelMove: boolean
@@ -22,3 +21,5 @@ export interface movesResponse {
   whiteMoves: string[],
   blackMoves: string[]
 }
+
+export type BoardJSON = responseCellData[][];

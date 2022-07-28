@@ -10,7 +10,7 @@ describe('Rook class', () => {
     [], []
   ];
 
-  const expectedMoves2 =[
+  const expectedMoves2 = [
     [{X: 7, Y: 6}, {X: 7, Y: 5}, {X: 7, Y: 4}, {X: 7, Y: 3}, {X: 7, Y: 2}, {X: 7, Y: 1}, {X: 7, Y: 0}],
     [{X: 6, Y: 7}, {X: 5, Y: 7}, {X: 4, Y: 7}, {X: 3, Y: 7}, {X: 2, Y: 7}, {X: 1, Y: 7}, {X: 0, Y: 7}],
     [], []

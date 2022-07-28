@@ -5,14 +5,16 @@ import { responseCellData } from '../Utils/interfaces';
 
 class Cell {
 
-  private readonly _color: color;//TODO: make this only on frontend
   private readonly _coordinate: coordinate;
   private _figure?: Figure;
 
   constructor(xCoordinate: number, yCoordinate: number) {
     this._coordinate = {X: xCoordinate, Y: yCoordinate};
-    this._color = this.getCellColorByCoordinate(this._coordinate);
   }
+
+  public getCoordinates = () => this._coordinate;
+
+  public getFigure = (): Figure | undefined => this._figure;
 
   public static isEqualCoordinates(coordinate: coordinate, comparisonСoordinate: coordinate): boolean {
     if(coordinate.X === comparisonСoordinate.X) {
@@ -28,21 +30,11 @@ class Cell {
     return false;
   } 
 
-  private getCellColorByCoordinate(coordinate: coordinate): color {
-    return (coordinate.X + coordinate.Y) % 2 === 0 ? 'white' : 'black';
-  }
-
-  public getCoordinates = () => this._coordinate;
-
-  public getColor = () => this._color; 
-
-  public getFigure = (): Figure | undefined => this._figure;
-
   public setFigure(figure: Figure): void {
     this._figure = figure;
     this._figure.setCoordinate(this._coordinate);
   } 
-  
+
   public removeFigure = (): void => this._figure = undefined;
 
   public hasAlliedFigure(figureColor: color): boolean {
@@ -63,7 +55,6 @@ class Cell {
 
   public toJSON = (): responseCellData => {
     return {
-      color: this._color,
       coordinate: this._coordinate,
       figure: this._figure ? this._figure.toJSON() : null, 
       isAvailabelMove: false

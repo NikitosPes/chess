@@ -2,44 +2,49 @@ import React, { useState, useEffect, useContext } from 'react';
 import { SocketContext } from '../../contexts/socket';
 
 import MovesTableItem from '../../components/MovesTableItem/MovesTableItem';
+import PlayersNameWrapper from '../../components/PlayersNameWrapper/PlayersNameWrapper';
 
+import { tableMoves } from '../../utils/types';
 import styles from './MovesTable.module.scss';
 
 
+const initialState: tableMoves = {
+  whiteMoves: [], 
+  blackMoves:[]
+}
+
 const MovesTable: React.FC = () => {
 
-  const [moves, setMoves] = useState<data>({whiteMoves: [], blackMoves:[]});
-  const socket  = useContext(SocketContext);
+  const [moves, setMoves] = useState<tableMoves>(initialState);
 
-  type data = {
-    whiteMoves: string[],
-    blackMoves: string[]
-  }
+  const socket  = useContext(SocketContext);
 
   useEffect(()=>{
     socket.on('moves:read', (moves) => setMoves(moves));
+
+    return () => {
+      socket.off('moves:read');
+    };
   }, [])
 
   return (
-    <div className={styles.movesTable}>
-      <div className={styles.playerNameContainer}>Nikita</div>
-
-      <div className={styles.movesContainer}>
-        {
-          moves.whiteMoves.map((move, index) => {
-            return (
-              <MovesTableItem 
-              moveIndex={index + 1} 
-              whiteMove={move} 
-              blackMove={moves?.blackMoves[index]}
-              key={index}
-              />
-            )
-          })
-        }
-      </div>
-
-      <div className={styles.playerNameContainer}>Alex</div>
+    <div className={styles.movesTableWrapper}>
+      <PlayersNameWrapper>
+        <div className={styles.movesTable}>
+          {
+            moves.whiteMoves.map((move, index) => {
+              return (
+                <MovesTableItem 
+                  moveIndex={index + 1} 
+                  whiteMove={move} 
+                  blackMove={moves?.blackMoves[index]}
+                  key={index}
+                />
+              )
+            })
+          }
+        </div>
+      </PlayersNameWrapper>
     </div>
   )
 }
